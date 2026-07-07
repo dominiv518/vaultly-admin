@@ -1,0 +1,88 @@
+{
+  "vaults": [
+    {
+      "id": "1",
+      "name": "Main Balance",
+      "balance": 2450.50,
+      "target": null,
+      "color": "#3b82f6",
+      "icon": "wallet"
+    },
+    {
+      "id": "2",
+      "name": "Emergency Fund",
+      "balance": 5000.00,
+      "target": 10000.00,
+      "color": "#ef4444",
+      "icon": "shield"
+    },
+    {
+      "id": "3",
+      "name": "Summer Vacation",
+      "balance": 750.00,
+      "target": 2500.00,
+      "color": "#10b981",
+      "icon": "sun"
+    },
+    {
+      "id": "4",
+      "name": "Crypto Reserve",
+      "balance": 1200.00,
+      "target": null,
+      "color": "#f59e0b",
+      "icon": "bitcoin"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx_1",
+      "type": "deposit",
+      "vaultId": "1",
+      "amount": 1500.00,
+      "description": "Monthly Salary Credit",
+      "timestamp": "2026-06-01T10:00:00.000Z"
+    },
+    {
+      "id": "tx_2",
+      "type": "transfer",
+      "fromVaultId": "1",
+      "toVaultId": "2",
+      "amount": 500.00,
+      "description": "Auto-save to Emergency Fund",
+      "timestamp": "2026-06-02T14:30:00.000Z"
+    },
+    {
+      "id": "tx_3",
+      "type": "withdraw",
+      "vaultId": "1",
+      "amount": 120.00,
+      "description": "Grocery shopping",
+      "timestamp": "2026-06-15T18:45:00.000Z"
+    },
+    {
+      "id": "tx_4",
+      "type": "deposit",
+      "vaultId": "3",
+      "amount": 250.00,
+      "description": "Savings allocation",
+      "timestamp": "2026-06-20T09:15:00.000Z"
+    },
+    {
+      "id": "tx_5",
+      "type": "withdraw",
+      "vaultId": "4",
+      "amount": 150.00,
+      "description": "Crypto market dip purchase",
+      "timestamp": "2026-06-23T21:00:00.000Z"
+    }
+  ],
+  "settings": {
+    "userName": "Alex Mercer",
+    "email": "alex.mercer@vaultly.com",
+    "currency": "USD",
+    "theme": "dark",
+    "notificationsEnabled": true,
+    "twoFactorEnabled": false,
+    "limitPerTransaction": 5000
+  }
+}
