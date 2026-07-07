@@ -1,4 +1,4 @@
-﻿// ΓöÇΓöÇΓöÇ IMPORTS ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+﻿// --- IMPORTS ------------------------------------------------------------------
 // React's useState lets us store values that, when changed, cause the UI to re-render.
 import { useState } from 'react';
 
@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 // We only import the specific icons we need from lucide-react to keep the bundle small.
 import { Eye, EyeOff, AlertCircle, ShieldCheck } from 'lucide-react';
 
-// Our custom hook ΓÇö pulls the login() function out of the global AuthContext.
+// Our custom hook - pulls the login() function out of the global AuthContext.
 import { useAuth } from '../context/AuthContext';
 
 
-// ΓöÇΓöÇΓöÇ COMPONENT ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// --- COMPONENT ----------------------------------------------------------------
 // `export default` means this is the main thing this file exports.
 // Any file that imports Login.jsx gets this function.
 export default function Login() {
@@ -24,7 +24,7 @@ export default function Login() {
   const navigate = useNavigate();
 
 
-  // ΓöÇΓöÇΓöÇ STATE ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // --- STATE ------------------------------------------------------------------
   // useState(initialValue) returns [currentValue, setterFunction].
   // Calling the setter updates the value AND re-renders the component.
 
@@ -40,17 +40,17 @@ export default function Login() {
   // Tracks the 6-digit authenticator code entered in step 2.
   const [totpCode, setTotpCode] = useState('');
 
-  // true = show password as plain text, false = show as dots (ΓÇóΓÇóΓÇóΓÇó).
+  // true = show password as plain text, false = show as dots (****).
   const [showPassword, setShowPassword] = useState(false);
 
-  // true while waiting for an API response ΓÇö disables the button to prevent double-submit.
+  // true while waiting for an API response - disables the button to prevent double-submit.
   const [loading, setLoading] = useState(false);
 
   // Stores an error message string. Empty string '' means no error is shown.
   const [error, setError] = useState('');
 
 
-  // ΓöÇΓöÇΓöÇ STEP 1 HANDLER ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // --- STEP 1 HANDLER -------------------------------------------------------
   // `async` marks this as an asynchronous function so we can use `await` inside it.
   async function handleCredentials(e) {
     // e is the form submit event. preventDefault() stops the browser refreshing the page.
@@ -62,7 +62,7 @@ export default function Login() {
     // .trim() removes surrounding whitespace. If either field is blank, show an error and stop.
     if (!email.trim() || !password.trim()) {
       setError('Please fill in all fields.');
-      return; // `return` exits the function early ΓÇö the code below does NOT run.
+      return; // `return` exits the function early - the code below does NOT run.
     }
 
     // Show the spinner and disable the button while we wait for the API.
@@ -77,7 +77,7 @@ export default function Login() {
       // `await` pauses HERE until the Promise resolves. The browser stays responsive during the wait.
       await new Promise(r => setTimeout(r, 900)); // simulated 900ms network delay
 
-      // Credentials accepted ΓÇö move to step 2 so the user can enter their 2FA code.
+      // Credentials accepted - move to step 2 so the user can enter their 2FA code.
       setStep(2);
 
     } catch (err) {
@@ -86,19 +86,19 @@ export default function Login() {
       setError(err.message || 'Invalid credentials. Please try again.');
 
     } finally {
-      // `finally` always runs ΓÇö whether try succeeded or catch ran.
+      // `finally` always runs - whether try succeeded or catch ran.
       // Always stop the spinner so the button becomes clickable again.
       setLoading(false);
     }
   }
 
 
-  // ΓöÇΓöÇΓöÇ STEP 2 HANDLER ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // --- STEP 2 HANDLER -------------------------------------------------------
   async function handleTwoFactor(e) {
     e.preventDefault();
     setError('');
 
-    // TOTP codes are always exactly 6 digits ΓÇö reject anything else.
+    // TOTP codes are always exactly 6 digits - reject anything else.
     if (totpCode.length !== 6) {
       setError('Enter the 6-digit code from your authenticator app.');
       return;
@@ -125,16 +125,16 @@ export default function Login() {
   }
 
 
-  // ΓöÇΓöÇΓöÇ JSX / RENDER ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
-  // Everything inside `return ()` is JSX ΓÇö React's HTML-like syntax.
+  // --- JSX / RENDER ---------------------------------------------------------
+  // Everything inside `return ()` is JSX - React's HTML-like syntax.
   // Key differences from HTML: use `className` not `class`, styles are JS objects,
   // events are camelCase (onClick, onChange), and expressions go inside { }.
   return (
-    // Outer wrapper ΓÇö `styles.page` makes this a flex row so left/right panels sit side by side.
+    // Outer wrapper - `styles.page` makes this a flex row so left/right panels sit side by side.
     <div style={styles.page}>
 
-      {/* ΓòÉΓòÉ LEFT PANEL ΓÇö Brand side (teal background) ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
-      {/* This panel is purely decorative/informational ΓÇö no form here. */}
+      {/* == LEFT PANEL - Brand side (teal background) ====================== */}
+      {/* This panel is purely decorative/informational - no form here. */}
       <div style={styles.leftPanel}>
         <div style={styles.brandContent}>
 
@@ -142,21 +142,21 @@ export default function Login() {
           <div style={styles.logoRow}>
             {/* Small rounded box housing the shield icon */}
             <div style={styles.logoIcon}>
-              {/* ShieldCheck from lucide-react ΓÇö size in px, color, strokeWidth control appearance */}
+              {/* ShieldCheck from lucide-react - size in px, color, strokeWidth control appearance */}
               <ShieldCheck size={22} color="#fff" strokeWidth={2} />
             </div>
             <span style={styles.logoText}>Vaultly</span>
           </div>
 
-          {/* Tagline + description ΓÇö sits in the vertical centre of the panel */}
+          {/* Tagline + description - sits in the vertical centre of the panel */}
           <div style={styles.brandBody}>
-            {/* h1 is the most important heading on the page ΓÇö there should only be one h1 per page */}
+            {/* h1 is the most important heading on the page - there should only be one h1 per page */}
             <h1 style={styles.brandHeading}>
               Manage your platform with confidence.
             </h1>
             <p style={styles.brandSub}>
               The Vaultly Admin Panel gives you full visibility and control over
-              users, transactions, and system settings ΓÇö all in one place. Fully customized for Dominic
+              users, transactions, and system settings - all in one place. Fully customized for Dominic
             </p>
           </div>
 
@@ -178,12 +178,12 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ΓòÉΓòÉ RIGHT PANEL ΓÇö Form side (light background) ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
+      {/* == RIGHT PANEL - Form side (light background) ===================== */}
       <div style={styles.rightPanel}>
         {/* formWrap constrains the form to a max-width so it doesn't stretch too wide */}
         <div style={styles.formWrap}>
 
-          {/* ΓöÇΓöÇ Form Header ΓöÇΓöÇ */}
+          {/* -- Form Header -- */}
           <div style={styles.formHeader}>
             {/*
               TERNARY OPERATOR: condition ? valueIfTrue : valueIfFalse
@@ -199,8 +199,8 @@ export default function Login() {
             </p>
           </div>
 
-          {/* ΓöÇΓöÇ Step Indicator Pills ΓöÇΓöÇ */}
-          {/* Shows the user "Step 1 ΓåÆ Step 2" progress visually */}
+          {/* -- Step Indicator Pills -- */}
+          {/* Shows the user "Step 1 -> Step 2" progress visually */}
           <div style={styles.stepRow}>
             {/*
               Spread syntax: { ...styles.stepPill, ...styles.stepPillActive }
@@ -217,7 +217,7 @@ export default function Login() {
             </span>
           </div>
 
-          {/* ΓöÇΓöÇ Error Banner ΓöÇΓöÇ */}
+          {/* -- Error Banner -- */}
           {/*
             SHORT-CIRCUIT: `{error && <div>...</div>}`
             In JS, `true && X` evaluates to X. `false && X` evaluates to false (renders nothing).
@@ -231,7 +231,7 @@ export default function Login() {
             </div>
           )}
 
-          {/* ΓòÉΓòÉ STEP 1 ΓÇö Email + Password ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
+          {/* == STEP 1 - Email + Password ==================================== */}
           {/*
             `{step === 1 && (...)}` only renders this block when step equals 1.
             When step changes to 2, React removes this from the DOM and shows step 2 below.
@@ -240,11 +240,11 @@ export default function Login() {
             // onSubmit fires when the user clicks the submit button OR presses Enter.
             <form onSubmit={handleCredentials} style={styles.form}>
 
-              {/* ΓöÇΓöÇ Email field ΓöÇΓöÇ */}
+              {/* -- Email field -- */}
               <div style={styles.fieldGroup}>
                 {/*
                   htmlFor="login-email" links this label to the input with id="login-email".
-                  Clicking the label focuses the input ΓÇö important for accessibility.
+                  Clicking the label focuses the input - important for accessibility.
                 */}
               
                 <input
@@ -259,7 +259,7 @@ export default function Login() {
                 />
               </div>
 
-              {/* ΓöÇΓöÇ Password field ΓöÇΓöÇ */}
+              {/* -- Password field -- */}
               <div style={styles.fieldGroup}>
     
                 {/* position:relative on this wrapper lets us absolutely-position the eye button inside */}
@@ -275,10 +275,10 @@ export default function Login() {
                     onChange={e => setPassword(e.target.value)}
                     autoComplete="current-password" // browser can offer to fill saved password
                   />
-                  {/* Eye toggle button ΓÇö sits inside the input on the right side */}
+                  {/* Eye toggle button - sits inside the input on the right side */}
                   <button
                     type="button" // CRITICAL: without this, clicking here would submit the form
-                    // `v => !v` is a functional update ΓÇö flips the current boolean value
+                    // `v => !v` is a functional update - flips the current boolean value
                     onClick={() => setShowPassword(v => !v)}
                     style={styles.eyeBtn}
                     // aria-label describes the button for screen readers (accessibility)
@@ -290,7 +290,7 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* ΓöÇΓöÇ Submit Button ΓöÇΓöÇ */}
+              {/* -- Submit Button -- */}
               <button
                 id="login-submit-btn"
                 type="submit"          // clicking this triggers the form's onSubmit
@@ -302,24 +302,24 @@ export default function Login() {
                   We use it here to show spinner + text side by side while loading.
                 */}
                 {loading
-                  ? <><span style={styles.spinner} />Signing inΓÇª</>
+                  ? <><span style={styles.spinner} />Signing in...</>
                   : 'Continue'}
               </button>
             </form>
           )}
 
-          {/* ΓòÉΓòÉ STEP 2 ΓÇö 2FA / TOTP Code ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
+          {/* == STEP 2 - 2FA / TOTP Code ===================================== */}
           {step === 2 && (
             <form onSubmit={handleTwoFactor} style={styles.form}>
 
-              {/* Instruction hint ΓÇö tells the user what to do */}
+              {/* Instruction hint - tells the user what to do */}
               <div style={styles.hintBox}>
                 Open your authenticator app and enter the code for{' '}
                 {/* {' '} explicitly inserts a space between the text and the <strong> tag */}
                 <strong>Vaultly Admin</strong>.
               </div>
 
-              {/* ΓöÇΓöÇ TOTP Code Input ΓöÇΓöÇ */}
+              {/* -- TOTP Code Input -- */}
               <div style={styles.fieldGroup}>
                 <label style={styles.label} htmlFor="login-totp-input">6-digit code</label>
                 <input
@@ -328,7 +328,7 @@ export default function Login() {
                   inputMode="numeric" // hints mobile browsers to open the number keyboard
                   // Spread base input styles then add extra overrides for the big centred code look.
                   style={{ ...styles.input, textAlign: 'center', fontSize: '1.375rem', fontWeight: 600, letterSpacing: '0.3em' }}
-                  placeholder="┬╖ ┬╖ ┬╖ ┬╖ ┬╖ ┬╖"
+                  placeholder=". . . . . ."
                   value={totpCode}
                   onChange={e =>
                     setTotpCode(
@@ -349,11 +349,11 @@ export default function Login() {
                 disabled={loading}
               >
                 {loading
-                  ? <><span style={styles.spinner} />VerifyingΓÇª</>
+                  ? <><span style={styles.spinner} />Verifying...</>
                   : 'Verify & Sign In'}
               </button>
 
-              {/* Back button ΓÇö returns to step 1 without a page reload */}
+              {/* Back button - returns to step 1 without a page reload */}
               <button
                 type="button" // type="button" prevents this from submitting the form
                 style={styles.backBtn}
@@ -363,14 +363,14 @@ export default function Login() {
                   setError('');    // clear any error message
                 }}
               >
-                ΓåÉ Back to login
+                <- Back to login
               </button>
             </form>
           )}
 
           {/* Footer note */}
           <p style={styles.footer}>
-            Dominic's Vaultly Admin Web App┬╖ Authorised access only
+            Dominic's Vaultly Admin Web App. Authorised access only
           </p>
         </div>
       </div>
@@ -379,26 +379,26 @@ export default function Login() {
 }
 
 
-// ΓöÇΓöÇΓöÇ STYLES OBJECT ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// --- STYLES OBJECT ------------------------------------------------------------
 // In React we can write CSS as a plain JavaScript object and pass it to `style={}`.
 // Property names use camelCase instead of kebab-case: e.g. `borderRadius` not `border-radius`.
 // Number values (e.g. 8) are treated as pixels automatically.
 // String values (e.g. '1rem') are used as-is.
 
 // We store the brand colour once in a constant so we can reuse it without repeating the hex code.
-const TEAL = '#0D9488';      // primary teal ΓÇö same as --primary in index.css
+const TEAL = '#0D9488';      // primary teal - same as --primary in index.css
 const TEAL_DARK = '#0F766E'; // darker shade used for hover states
 
 const styles = {
 
-  // ΓöÇΓöÇ Outer page wrapper ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Outer page wrapper ----------------------------------------------------
   page: {
     display: 'flex',                          // puts left and right panels side by side
     minHeight: '100vh',                       // fills the full browser window height
     fontFamily: "'Inter', system-ui, sans-serif", // Inter first, then system font as fallback
   },
 
-  // ΓöÇΓöÇ Left Panel ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Left Panel ------------------------------------------------------------
   leftPanel: {
     width: '42%',           // takes up 42% of the viewport width
     background: TEAL,       // solid teal background using our constant
@@ -435,7 +435,7 @@ const styles = {
     fontSize: '1.25rem',      // 20px
     fontWeight: 700,           // bold
     color: '#fff',
-    letterSpacing: '-0.02em', // slightly tighten the character spacing ΓÇö looks more premium
+    letterSpacing: '-0.02em', // slightly tighten the character spacing - looks more premium
   },
 
   brandBody: {
@@ -448,7 +448,7 @@ const styles = {
   },
 
   brandHeading: {
-    fontSize: '1.75rem',      // 28px ΓÇö large enough to feel impactful
+    fontSize: '1.75rem',      // 28px - large enough to feel impactful
     fontWeight: 700,
     color: '#fff',
     lineHeight: 1.35,         // tighter line height for headings looks more designed
@@ -458,7 +458,7 @@ const styles = {
 
   brandSub: {
     fontSize: '0.9375rem',             // 15px
-    color: 'rgba(255,255,255,0.72)',   // slightly translucent white ΓÇö less dominant than heading
+    color: 'rgba(255,255,255,0.72)',   // slightly translucent white - less dominant than heading
     lineHeight: 1.7,                   // generous line height for body text readability
   },
 
@@ -488,10 +488,10 @@ const styles = {
     flexShrink: 0,                     // dot should never shrink even if text wraps
   },
 
-  // ΓöÇΓöÇ Right Panel ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Right Panel -----------------------------------------------------------
   rightPanel: {
     flex: 1,                 // takes up all remaining width (100% minus the left panel's 42%)
-    background: '#F8FAFC',   // very light grey ΓÇö feels clean and professional
+    background: '#F8FAFC',   // very light grey - feels clean and professional
     display: 'flex',
     alignItems: 'center',    // vertically centre the form in the panel
     justifyContent: 'center', // horizontally centre the form in the panel
@@ -500,7 +500,7 @@ const styles = {
 
   formWrap: {
     width: '100%',
-    maxWidth: 400, // cap the form width ΓÇö wide forms are hard to read
+    maxWidth: 400, // cap the form width - wide forms are hard to read
   },
 
   formHeader: {
@@ -510,7 +510,7 @@ const styles = {
   formTitle: {
     fontSize: '1.5rem',       // 24px
     fontWeight: 700,
-    color: '#0F172A',         // very dark navy ΓÇö almost black, not harsh pure black
+    color: '#0F172A',         // very dark navy - almost black, not harsh pure black
     letterSpacing: '-0.02em',
     marginBottom: 6,
   },
@@ -521,7 +521,7 @@ const styles = {
     lineHeight: 1.5,
   },
 
-  // ΓöÇΓöÇ Step Pills ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Step Pills ------------------------------------------------------------
   stepRow: {
     display: 'flex',
     alignItems: 'center',
@@ -531,7 +531,7 @@ const styles = {
 
   stepPill: {
     // Base styles shared by ALL pills. Colour is added by the variant styles below.
-    fontSize: '0.75rem',    // 12px ΓÇö small label size
+    fontSize: '0.75rem',    // 12px - small label size
     fontWeight: 600,
     padding: '4px 10px',
     borderRadius: 20,       // high value = fully pill-shaped
@@ -539,19 +539,19 @@ const styles = {
   },
 
   stepPillActive: {
-    // Applied to the CURRENT step ΓÇö teal background with white text
+    // Applied to the CURRENT step - teal background with white text
     background: TEAL,
     color: '#fff',
   },
 
   stepPillDone: {
-    // Applied to a COMPLETED step ΓÇö light green tint
+    // Applied to a COMPLETED step - light green tint
     background: '#D1FAE5', // very light green
     color: '#065F46',      // dark green text for contrast
   },
 
   stepPillIdle: {
-    // Applied to a FUTURE step not yet reached ΓÇö grey/neutral
+    // Applied to a FUTURE step not yet reached - grey/neutral
     background: '#F1F5F9',
     color: '#94A3B8',
   },
@@ -562,7 +562,7 @@ const styles = {
     background: '#E2E8F0', // light grey border colour
   },
 
-  // ΓöÇΓöÇ Error Box ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Error Box -------------------------------------------------------------
   errorBox: {
     display: 'flex',
     alignItems: 'center',
@@ -572,11 +572,11 @@ const styles = {
     borderRadius: 8,
     padding: '10px 14px',
     fontSize: '0.875rem',          // 14px
-    color: '#B91C1C',              // dark red text ΓÇö readable on the light red background
+    color: '#B91C1C',              // dark red text - readable on the light red background
     marginBottom: 16,
   },
 
-  // ΓöÇΓöÇ Form Layout ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // -- Form Layout -----------------------------------------------------------
   form: {
     display: 'flex',
     flexDirection: 'column', // stack fields vertically
@@ -592,7 +592,7 @@ const styles = {
   label: {
     fontSize: '0.875rem', // 14px
     fontWeight: 500,
-    color: '#374151',     // dark grey ΓÇö clearly readable but not black
+    color: '#374151',     // dark grey - clearly readable but not black
   },
 
   input: {
@@ -601,7 +601,7 @@ const styles = {
     background: '#fff',
     border: '1px solid #D1D5DB',                      // light grey border
     borderRadius: 8,
-    fontSize: '0.9375rem',                            // 15px ΓÇö matches label size
+    fontSize: '0.9375rem',                            // 15px - matches label size
     color: '#0F172A',                                 // dark text for typed value
     outline: 'none',                                  // remove default browser focus ring (CSS handles it)
     transition: 'border-color 0.15s, box-shadow 0.15s', // smooth focus animation
@@ -612,7 +612,7 @@ const styles = {
     position: 'absolute',           // positioned relative to the parent div with position:relative
     right: 12,                      // 12px from the right edge of the input
     top: '50%',                     // start at the vertical midpoint
-    transform: 'translateY(-50%)',  // pull up by half its own height ΓÇö perfectly centres it
+    transform: 'translateY(-50%)',  // pull up by half its own height - perfectly centres it
     background: 'none',
     border: 'none',
     cursor: 'pointer',
@@ -656,7 +656,7 @@ const styles = {
     borderRadius: 8,
     padding: '12px 14px',
     fontSize: '0.875rem',
-    color: '#166534',            // dark green text ΓÇö good contrast on light green background
+    color: '#166534',            // dark green text - good contrast on light green background
     lineHeight: 1.6,
   },
 
@@ -669,13 +669,13 @@ const styles = {
     textAlign: 'center',
     padding: '6px 0',
     textDecoration: 'underline',
-    textUnderlineOffset: 3,     // moves the underline slightly away from the text ΓÇö cleaner look
+    textUnderlineOffset: 3,     // moves the underline slightly away from the text - cleaner look
   },
 
   footer: {
     marginTop: 36,
-    fontSize: '0.75rem',  // 12px ΓÇö small disclaimer text
-    color: '#94A3B8',     // light grey ΓÇö unobtrusive
+    fontSize: '0.75rem',  // 12px - small disclaimer text
+    color: '#94A3B8',     // light grey - unobtrusive
     textAlign: 'center',
   },
 };
