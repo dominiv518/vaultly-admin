@@ -30,50 +30,27 @@
 //
 // ============================================================
 
-// Outlet = the "slot" where child page components are injected
+import { useState, useCallback } from 'react';
 import { Outlet } from 'react-router-dom';
-
-// TODO: These will be imported once the components are built.
-// import Sidebar from '../components/Sidebar';
-// import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
 export default function DashboardLayout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = useCallback(() => setIsSidebarOpen((v) => !v), []);
+  const closeSidebar = useCallback(() => setIsSidebarOpen(false), []);
+
   return (
-    // `app-shell` is a CSS class from index.css.
-    // It sets: display: flex  so the sidebar and content
-    // sit side by side horizontally.
     <div className="app-shell">
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
-      {/*
-        SIDEBAR — fixed on the left side.
-        Contains the logo and navigation links.
-        Uncomment when Sidebar.jsx is built:
-      */}
-      {/* <Sidebar /> */}
-
-      {/*
-        MAIN CONTENT AREA — takes up the rest of the screen.
-        `main-content` in CSS sets: margin-left: var(--sidebar-w)
-        so it starts after the sidebar.
-      */}
       <div className="main-content">
+        <Navbar onToggleSidebar={toggleSidebar} />
 
-        {/*
-          NAVBAR — sticky at the top of the content area.
-          Contains search, notifications bell, admin avatar.
-          Uncomment when Navbar.jsx is built:
-        */}
-        {/* <Navbar /> */}
-
-        {/*
-          PAGE BODY — the scrollable content zone.
-          <Outlet /> renders the currently active page here.
-          `page-body` in CSS adds consistent padding around it.
-        */}
         <main className="page-body">
           <Outlet />
         </main>
-
       </div>
     </div>
   );
