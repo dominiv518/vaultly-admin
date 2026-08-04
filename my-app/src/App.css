@@ -64,6 +64,9 @@
   place-items: center;
   flex-grow: 1;
 
+  /* RESPONSIVE: When screen width is 1024px or less (tablets and mobile devices), 
+     add padding to avoid content touching the screen edges and reduce the gap 
+     between elements to save vertical space. */
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
     gap: 18px;
@@ -78,6 +81,8 @@
   & > div {
     flex: 1 1 0;
     padding: 32px;
+    /* RESPONSIVE: When screen width is 1024px or less, reduce the padding inside
+       the child div elements of #next-steps so they fit better on smaller screens. */
     @media (max-width: 1024px) {
       padding: 24px 20px;
     }
@@ -89,6 +94,9 @@
     height: 22px;
   }
 
+  /* RESPONSIVE: When screen width is 1024px or less, change the layout direction 
+     from a horizontal row to a vertical column (stacking elements vertically) and 
+     center the text instead of aligning it to the left. */
   @media (max-width: 1024px) {
     flex-direction: column;
     text-align: center;
@@ -98,6 +106,9 @@
 #docs {
   border-right: 1px solid var(--border);
 
+  /* RESPONSIVE: On screens 1024px or smaller, since #next-steps elements are stacked vertically 
+     instead of side-by-side, we remove the vertical right border and replace it with a 
+     horizontal bottom border to separate the stacked sections. */
   @media (max-width: 1024px) {
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -136,6 +147,12 @@
     }
   }
 
+  /* RESPONSIVE: On smaller screens (1024px or less), adjust the unordered list of links:
+     - Allow the items to wrap into multiple rows (flex-wrap).
+     - Center the items.
+     - Make each list item (li) take up roughly half the width (50% minus the gap) 
+       so they appear as a 2-column grid instead of a single row.
+     - Make the links (a) stretch to fill the 100% width of their grid cell. */
   @media (max-width: 1024px) {
     margin-top: 20px;
     flex-wrap: wrap;
@@ -156,6 +173,8 @@
 #spacer {
   height: 88px;
   border-top: 1px solid var(--border);
+  /* RESPONSIVE: On smaller screens, reduce the height of the spacer from 88px to 48px 
+     to tighten up the vertical rhythm and take up less screen real estate. */
   @media (max-width: 1024px) {
     height: 48px;
   }
