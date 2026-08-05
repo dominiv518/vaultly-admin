@@ -11,6 +11,10 @@ import { Eye, EyeOff, AlertCircle, ShieldCheck } from 'lucide-react';
 // Our custom hook - pulls the login() function out of the global AuthContext.
 import { useAuth } from '../context/AuthContext';
 
+// login() here calls the real backend's POST /api/auth/login route.
+// Renamed on import so it doesn't clash with useAuth's own login().
+import { login as loginRequest } from '../lib/api';
+
 
 // --- COMPONENT ----------------------------------------------------------------
 // `export default` means this is the main thing this file exports.
@@ -69,15 +73,14 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // TODO: replace this fake delay with a real fetch() call to your backend:
-      //   const res = await fetch('/api/auth/login', { method:'POST', body: JSON.stringify({email,password}) });
-      //   const data = await res.json();
-      //   if (!data.success) throw new Error(data.error.message);
-      //
+      // Real call to the backend's POST /api/auth/login route.
       // `await` pauses HERE until the Promise resolves. The browser stays responsive during the wait.
-      await new Promise(r => setTimeout(r, 900)); // simulated 900ms network delay
+      const data = await loginRequest(email, password);
+      if (!data.success) throw new Error(data.error?.message || 'Invalid credentials. Please try again.');
 
       // Credentials accepted - move to step 2 so the user can enter their 2FA code.
+      // NOTE: the backend doesn't have a 2FA/TOTP route yet, so step 2 below still
+      // just checks the code is 6 digits without verifying it against anything real.
       setStep(2);
 
     } catch (err) {
@@ -363,7 +366,7 @@ export default function Login() {
                   setError('');    // clear any error message
                 }}
               >
-                <- Back to login
+                {'<- Back to login'}
               </button>
             </form>
           )}

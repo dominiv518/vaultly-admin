@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+
+# Claude Code project files
+CLAUDE.md
+.claude
 
 # Editor directories and files
 .vscode/*

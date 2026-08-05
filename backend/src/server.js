@@ -37,42 +37,44 @@ app.use(express.json());  // let the server read incoming JSON
 
 // --- LOAD SAVED DATA (runs once, when the server starts) ----------------------
 
-// Read data.json as text, then turn that text back into a real JavaScript array.
+// Read data.json as text, then turn that text back into a real JavaScript object.
 //   fs.readFileSync(...)  -> the file's contents, as text
-//   JSON.parse(...)       -> text turned back into an array of objects
-// NOTE: data.json must contain valid JSON. If it's brand new, put  []  inside it.
-let transactions = JSON.parse(fs.readFileSync("data.json", "utf-8"));
+//   JSON.parse(...)       -> text turned back into an object
+// data.json actually looks like: { vaults: [...], transactions: [...], settings: {...} }
+// so we keep the whole thing in `data` and work with `data.transactions` below.
+let data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
 
 
-// A small helper: save the current transactions back to the file.
-function saveTransactions() {
-  // JSON.stringify(...) turns our array into text.
+// A small helper: save the current data back to the file.
+function saveData() {
+  // JSON.stringify(...) turns our object back into text.
   // The  null, 2  part just makes the saved file neatly indented and readable.
-  fs.writeFileSync("data.json", JSON.stringify(transactions, null, 2));
+  fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
 }
 
 
 // --- TRANSACTION ROUTES ------------------------------------------------------
 
-// GET /transactions  ->  hand back the list we loaded from the file.
+// GET /transactions  ->  hand back everything we loaded from the file
+// (vaults + transactions + settings), same shape data.json is stored in.
 app.get("/transactions", (req, res) => {
-  res.json(transactions);
+  res.json(data);
 });
 
 app.delete("/transactions/:id", (req, res) => {
-  const id = Number(req.params.id);
-  transactions = transactions.filter(
+  const id = req.params.id; // transaction ids in data.json are strings, e.g. "tx_1"
+  data.transactions = data.transactions.filter(
     t => t.id !== id
   );
-  saveTransactions();
-  res.json(transactions)
+  saveData();
+  res.json(data)
 });
 
 // POST /transactions  ->  add a new one AND save, so it survives a restart.
 app.post("/transactions", (req, res) => {
-  transactions.push(req.body);   // add it to the array (in memory)
-  saveTransactions();            // write the array to the file (on disk)
-  res.json(transactions);        // reply with the updated list
+  data.transactions.push(req.body);   // add it to the array (in memory)
+  saveData();                         // write the object to the file (on disk)
+  res.json(data);                     // reply with the updated data
 });
 
 
