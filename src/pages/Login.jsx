@@ -363,7 +363,7 @@ export default function Login() {
                   setError('');    // clear any error message
                 }}
               >
-                ΓåÉ Back to login
+              Back to login &larr;
               </button>
             </form>
           )}
