@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   Wallet, ArrowDownRight, ArrowUpRight, TrendingUp,
   TrendingDown, Target, ChevronRight, CalendarDays,
-  PiggyBank, ReceiptText, Loader2
+  PiggyBank, ReceiptText, Loader2, Trash2, Plus
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar,
@@ -10,8 +10,8 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
-const API_BASE = 'http://localhost:3000';
+// All backend calls (base URL, endpoints, response shapes) live in lib/api.js
+import { getTransactions, addTransaction, deleteTransaction } from '../lib/api';
 
 // Category colours for the spending donut
 const CATEGORY_COLORS = [
@@ -122,28 +122,31 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('all');
 
+  // Add-transaction form state
+  const [newTx, setNewTx] = useState({ description: '', amount: '', type: 'withdraw', vaultId: '' });
+  const [txError, setTxError] = useState('');
+  const [txSaving, setTxSaving] = useState(false);
+
+  // Shared helper: the backend replies with the full { vaults, transactions,
+  // settings } object on GET, POST and DELETE, so every call below can reuse this.
+  // (Still handles a plain array too, in case the backend shape ever changes.)
+  const applyData = (data) => {
+    if (Array.isArray(data)) {
+      setTransactions(data);
+    } else {
+      setTransactions(data.transactions || []);
+      setVaults(data.vaults || []);
+      setSettings(data.settings || null);
+    }
+  };
+
   // ── Fetch data from backend ──────────────────────────
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-
-        // The server's GET /transactions returns the full data.json object
-        // which contains { vaults, transactions, settings }
-        const res = await fetch(`${API_BASE}/transactions`);
-        if (!res.ok) throw new Error('Failed to fetch data');
-        const data = await res.json();
-
-        // Handle both shapes: full data object or plain transactions array
-        if (Array.isArray(data)) {
-          setTransactions(data);
-        } else {
-          setTransactions(data.transactions || []);
-          setVaults(data.vaults || []);
-          setSettings(data.settings || null);
-        }
-
+        applyData(await getTransactions());
       } catch (err) {
         console.error('Dashboard fetch error:', err);
         setError(err.message);
@@ -154,6 +157,45 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
+
+  // ── Add transaction ──────────────────────────────────
+  async function handleAddTransaction(e) {
+    e.preventDefault();
+    setTxError('');
+
+    if (!newTx.description.trim() || !newTx.amount || !newTx.vaultId) {
+      setTxError('Fill in description, amount and vault.');
+      return;
+    }
+
+    setTxSaving(true);
+    try {
+      const tx = {
+        id: `tx_${Date.now()}`,
+        type: newTx.type,
+        vaultId: newTx.vaultId,
+        amount: parseFloat(newTx.amount),
+        description: newTx.description.trim(),
+        timestamp: new Date().toISOString(),
+      };
+      applyData(await addTransaction(tx));
+      setNewTx({ description: '', amount: '', type: 'withdraw', vaultId: newTx.vaultId });
+    } catch (err) {
+      setTxError(err.message);
+    } finally {
+      setTxSaving(false);
+    }
+  }
+
+  // ── Delete transaction ───────────────────────────────
+  async function handleDeleteTransaction(id) {
+    try {
+      applyData(await deleteTransaction(id));
+    } catch (err) {
+      console.error('Delete transaction error:', err);
+      setTxError(err.message);
+    }
+  }
 
   // ── Derived data (computed from fetched transactions) ─────────
   const monthlyData = useMemo(() => groupByMonth(transactions), [transactions]);
@@ -422,6 +464,49 @@ export default function Dashboard() {
               <button style={styles.linkBtn}>View all <ChevronRight size={14} /></button>
             )}
           </div>
+
+          {/* Add transaction form - posts to the backend's POST /transactions route */}
+          {!loading && (
+            <form onSubmit={handleAddTransaction} style={styles.addTxForm}>
+              <input
+                type="text"
+                placeholder="Description"
+                value={newTx.description}
+                onChange={e => setNewTx({ ...newTx, description: e.target.value })}
+                style={{ ...styles.addTxInput, flex: 2 }}
+              />
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Amount"
+                value={newTx.amount}
+                onChange={e => setNewTx({ ...newTx, amount: e.target.value })}
+                style={{ ...styles.addTxInput, flex: 1 }}
+              />
+              <select
+                value={newTx.type}
+                onChange={e => setNewTx({ ...newTx, type: e.target.value })}
+                style={styles.addTxInput}
+              >
+                <option value="withdraw">Expense</option>
+                <option value="deposit">Income</option>
+                <option value="transfer">Transfer</option>
+              </select>
+              <select
+                value={newTx.vaultId}
+                onChange={e => setNewTx({ ...newTx, vaultId: e.target.value })}
+                style={styles.addTxInput}
+              >
+                <option value="">Vault…</option>
+                {vaults.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+              </select>
+              <button type="submit" disabled={txSaving} style={styles.addTxBtn}>
+                <Plus size={16} />
+              </button>
+            </form>
+          )}
+          {txError && <p style={{ fontSize: '0.75rem', color: '#EF4444', margin: '0 0 12px' }}>{txError}</p>}
+
           {loading ? (
             <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Loader2 size={22} style={{ color: '#4A5C7A', animation: 'spin 1s linear infinite' }} />
@@ -443,9 +528,20 @@ export default function Dashboard() {
                       </p>
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.875rem', fontWeight: 700, color: tx.type === 'deposit' ? '#10B981' : tx.type === 'withdraw' ? '#EF4444' : '#F59E0B', whiteSpace: 'nowrap' }}>
-                    {tx.type === 'deposit' ? '+' : tx.type === 'withdraw' ? '-' : ''}{fmt(tx.amount)}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 700, color: tx.type === 'deposit' ? '#10B981' : tx.type === 'withdraw' ? '#EF4444' : '#F59E0B', whiteSpace: 'nowrap' }}>
+                      {tx.type === 'deposit' ? '+' : tx.type === 'withdraw' ? '-' : ''}{fmt(tx.amount)}
+                    </span>
+                    {/* Deletes via the backend's DELETE /transactions/:id route */}
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTransaction(tx.id)}
+                      style={styles.deleteBtn}
+                      aria-label="Delete transaction"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -608,5 +704,43 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
     padding: 0,
+  },
+  addTxForm: {
+    display: 'flex',
+    gap: 8,
+    marginBottom: 14,
+    flexWrap: 'wrap',
+  },
+  addTxInput: {
+    minWidth: 0,
+    padding: '8px 10px',
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    color: '#F0F6FF',
+    fontSize: '0.8125rem',
+  },
+  addTxBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 34,
+    padding: '8px 10px',
+    background: '#0D9488',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    flexShrink: 0,
+  },
+  deleteBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'none',
+    border: 'none',
+    color: '#4A5C7A',
+    cursor: 'pointer',
+    padding: 4,
   },
 };
